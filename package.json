@@ -1,0 +1,20 @@
+{
+  "name": "maze",
+  "version": "0.0.1",
+  "description": "Maze solver using TDD, ES6 and functional programming",
+  "homepage": "https://github.com/HaturiHanzo/maze",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HaturiHanzo/maze"
+  },
+  "engines": {
+    "node": ">=4.2.0"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/gulp test",
+  },
+  "devDependencies": {
+      "chai": "*",
+      "mocha": "*"
+  }
+}
