@@ -5,12 +5,13 @@
 
 /**
  * Converts matrix
+ * TODO: add implementation
  *
  * @param {Array<Array<String>>}
  * @returns {Array<Number>}
  */
-const convertMatrix => (inputMatrix) {
-
+const convertMatrix = (inputMatrix) => {
+    return [];
 }
 
 module.exports = convertMatrix;
