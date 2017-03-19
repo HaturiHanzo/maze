@@ -11,7 +11,7 @@
     "node": ">=4.2.0"
   },
   "scripts": {
-    "test": "./node_modules/.bin/gulp test"
+    "test": "mocha ./**/*.spec.js"
   },
   "devDependencies": {
       "chai": "3.5.0",
