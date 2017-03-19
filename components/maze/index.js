@@ -11,16 +11,45 @@ class Maze extends Array {
      *
      * @param {Number} width
      * @param {Number} height
-     * @param {Array} arr
+     * @param {Array|...Number} [elements]
      */
-    constructor(width, height, arr) {
-        if (width * height !== elements.length) {
-            throw new Error('Incorrect number of arguments');
+    constructor(width, height, ...elements) {
+        if (elements.length) {
+            if (elements[0] instanceof Array) {
+                super(...elements[0]);
+            } else {
+                super(...elements);
+            }
+        } else {
+            super();
         }
 
         this.width = width;
         this.height = height;
-        this.origin = elements;
+    }
+
+    /**
+     * Element getter
+     *
+     * @param {Number} i
+     * @param {Number} j
+     * @returns {*}
+     */
+    getElem(i, j) {
+        return this[this.width * 2 * i + j];
+    }
+
+    /**
+     * Element setter
+     *
+     * @param {Number} i
+     * @param {Number} j
+     * @param {*} val
+     * @returns {Maze}
+     */
+    setElem(i, j, val) {
+        this[this.width * 2 * i + j] = val;
+        return this;
     }
 }
 
