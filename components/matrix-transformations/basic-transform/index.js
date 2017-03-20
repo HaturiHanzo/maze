@@ -3,14 +3,15 @@
  * for path finding format
  */
 'use strict';
-
+const Maze = require('../../maze'),
+    printMatrix = require('../../print-matrix');
 /**
  * Converts matrix
  *
  * @param {Number} width
  * @param {Number} height
  * @param {Array.<String>} maze
- * @returns {Array.<Number>}
+ * @returns {Maze}
  */
 const convertMatrix = (width, height, maze) => {
     let localOffset = width * 2;
@@ -28,7 +29,7 @@ const convertMatrix = (width, height, maze) => {
             result[glOffset + dbIdx + localOffset + 1] = elem[3];
 
             return result;
-        }, new Array(maze.length * 4));
+        }, new Maze(width, height));
 };
 
 module.exports = convertMatrix;

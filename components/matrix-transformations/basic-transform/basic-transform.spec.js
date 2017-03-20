@@ -2,7 +2,6 @@
 
 const expect = require('chai').expect,
     basicTransform = require('./index.js');
-    //maze = require('../../maze');
 
 describe('basic-transform.spec.js', () => {
     let inputArray, width, height, resultArray;
@@ -22,11 +21,7 @@ describe('basic-transform.spec.js', () => {
         resultArray = basicTransform(width, height, inputArray);
     });
 
-    it('returns an array', () => {
-        expect(resultArray).to.be.an.instanceof(Array);
-    });
-
-    it('result array length greater than input array length in 4 times', () => {
+    it('result maze length greater than input array length in 4 times', () => {
         expect(resultArray.length).to.be.equal(inputArray.length * 4);
     });
 

@@ -51,6 +51,26 @@ class Maze extends Array {
         this[this.width * 2 * i + j] = val;
         return this;
     }
+
+    /**
+     * toString override method
+     *
+     * @override
+     */
+    toString() {
+        let dbW = this.width * 2,
+            dbH = this.height * 2,
+            strMaze = '';
+
+        for (var i = 0; i < dbH; i++) {
+            for (let j = 0; j < dbW; j++) {
+                strMaze += this[i * dbW + j];
+            }
+            strMaze += '\n';
+        }
+
+        return strMaze;
+    }
 }
 
 module.exports = Maze;

@@ -5,37 +5,32 @@ const expect = require('chai').expect,
 
 describe('maze.js', () => {
     describe('Instance of maze should ', () => {
-        let maze;
+        let maze1, maze2;
 
         beforeEach(() => {
-            /**
-             * Creates next maze:
-             * /\
-             * \/
-             */
-            maze = new Maze(2, 2, '/', '\\', '\\', '/');
+            maze1 = new Maze(2, 2, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1);
+            maze2 = new Maze(2, 2, [1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1]);
         });
 
         it('be instance of Array', () => {
-            expect(maze).to.be.an.instanceof(Array);
+            expect(maze1).to.be.an.instanceof(Array);
+            expect(maze2).to.be.an.instanceof(Array);
         });
 
-        it('contains an original array', () => {
-            expect(maze.getOrigin()).to.be.equal(['/', '\\', '\\', '/']);
+        it('contain elements in object root, passed as array or parameters to constructor', () => {
+            expect(maze1.length).to.be.equal(16);
+            expect(maze2.length).to.be.equal(16);
+            expect(maze1).to.be.eql(maze2);
         });
 
-        it('contain converted matrix', () => {
-            expect(maze.getMaze()).to.be.equal([
-                0, 1, 1, 0,
-                1, 0, 0, 1,
-                1, 0, 0, 1,
-                0, 1, 1, 0
-            ]);
+        it('correctly get value from X,Y coordinates', () => {
+            expect(maze1.getElem(1, 3)).to.be.equal(1);
         });
 
-        it('contain special getters', () => {
-            expect(maze.getPoint(0, 2).to.be.equal(1));
-            expect(maze.getPoint(2, 1).to.be.equal(0));
+        it('correctly set value in X,Y coordinates', () => {
+            let val = 10;
+            maze1.setElem(2, 3, val);
+            expect(val).to.be.equal(maze1.getElem(2, 3));
         });
     });
 });
