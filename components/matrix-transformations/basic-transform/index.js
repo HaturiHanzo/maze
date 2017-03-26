@@ -3,8 +3,7 @@
  * for path finding format
  */
 'use strict';
-const Maze = require('../../maze'),
-    printMatrix = require('../../print-matrix');
+const Maze = require('../../maze');
 /**
  * Converts matrix
  *

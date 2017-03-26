@@ -3,6 +3,12 @@
  * which extends Array class and allows to works with 1 dimensional array like with
  * 2 dimensional matrix
  */
+
+/**
+ * @typedef {Array} Coordinate
+ * @prop {Number} Coordinate[0] I coordinate
+ * @prop {Number} Coordinate[1] J coordinate
+ */
 'use strict';
 
 class Maze extends Array {
@@ -26,29 +32,29 @@ class Maze extends Array {
 
         this.width = width;
         this.height = height;
+        this.realHeight = this.height * 2;
+        this.realWidth = this.width * 2;
     }
 
     /**
      * Element getter
      *
-     * @param {Number} i
-     * @param {Number} j
+     * @param {Coordinate} c
      * @returns {*}
      */
-    getElem(i, j) {
-        return this[this.width * 2 * i + j];
+    getElem(c) {
+        return this[_countLinearOffset.call(this, c)];
     }
 
     /**
      * Element setter
      *
-     * @param {Number} i
-     * @param {Number} j
+     * @param {Coordinate} c
      * @param {*} val
      * @returns {Maze}
      */
-    setElem(i, j, val) {
-        this[this.width * 2 * i + j] = val;
+    setElem(c, val) {
+        this[_countLinearOffset.call(this, c)] = val;
         return this;
     }
 
@@ -58,19 +64,42 @@ class Maze extends Array {
      * @override
      */
     toString() {
-        let dbW = this.width * 2,
-            dbH = this.height * 2,
-            strMaze = '';
+        let strMaze = '';
 
-        for (var i = 0; i < dbH; i++) {
-            for (let j = 0; j < dbW; j++) {
-                strMaze += this[i * dbW + j];
+        for (var i = 0; i < this.realHeight; i++) {
+            for (let j = 0; j < this.realWidth; j++) {
+                strMaze += this[i * this.realWidth + j];
             }
             strMaze += '\n';
         }
 
         return strMaze;
     }
+
+    /**
+     * Clones maze
+     * @returns {Maze}
+     */
+    clone() {
+        return new Maze(this.width, this.height, this.slice());
+    }
+}
+
+Maze.FILED_TYPES = {
+    EMPTY: 0,
+    WALL: 1,
+    OPEN_PATH: 2,
+    TEMP_VAL: 10
+};
+
+/**
+ * Converts matrix i,j to linear maze offset
+ *
+ * @param {Coordinate} c
+ * @private
+ */
+function _countLinearOffset (c) {
+    return this.realWidth * c[0] + c[1];
 }
 
 module.exports = Maze;
