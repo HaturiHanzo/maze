@@ -36,13 +36,11 @@ const positionFilter = (c) => {
  */
 const mazeFieldTypeFilter = (maze, c, moves, fieldType) => {
     return moves.filter((move) => {
-        return maze.getElem(MOVEMENTS[move](c)) !== fieldType
+        return maze.getElem(MOVEMENTS[move](c)) !== fieldType;
     });
 };
 
 /**
- * TODO: write tests!!
- *
  * Checks bound violation
  *
  * @param {Coordinates} c

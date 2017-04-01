@@ -14,9 +14,21 @@ const Maze = require('../../maze'),
  * @param {Coordinates} c
  */
 const searchForOpenPaths = (maze, c) => {
-    let moves, touchesWithBound, nextVal;
+    let moves, touchesWithBound, nextVal, isOnTheEdge;
 
     moves = filters.positionFilter(c);
+
+    // Checks if element has movement to non existing field
+    isOnTheEdge = moves.some((move) => {
+        return filters.checkBoundViolation(MOVEMENTS[move](c), maze);
+    });
+
+    if (isOnTheEdge) {
+        maze.setElem(c, Maze.FILED_TYPES.OPEN_PATH);
+        return Maze.FILED_TYPES.OPEN_PATH;
+    }
+
+    // Filters useless paths
     moves = filters.mazeFieldTypeFilter(maze, c, moves, Maze.FILED_TYPES.WALL);
     moves = filters.mazeFieldTypeFilter(maze, c, moves, Maze.FILED_TYPES.TEMP_VAL);
 
@@ -24,6 +36,7 @@ const searchForOpenPaths = (maze, c) => {
         return Maze.FILED_TYPES.EMPTY;
     }
 
+    // Checks if any move has touch with open path
     touchesWithBound = moves.some((move) => {
         return maze.getElem(MOVEMENTS[move](c)) === Maze.FILED_TYPES.OPEN_PATH;
     });
@@ -49,24 +62,11 @@ const searchForOpenPaths = (maze, c) => {
 const convertMatrix = (maze) => {
     let mazeCopy = maze.clone();
 
-    for (let i = 0; i < mazeCopy.realHeight; i++) {
-        for (let j = 0; j < mazeCopy.realWidth; j++) {
-            if (i * j === 0 || i === mazeCopy.realHeight - 1 || j === mazeCopy.realWidth - 1) {
-                let c = [i, j];
-                if (mazeCopy.getElem(c) === Maze.FILED_TYPES.EMPTY) {
-                    mazeCopy.setElem(c, Maze.FILED_TYPES.OPEN_PATH);
-                }
-            }
+    mazeCopy.forEach((elem, c) => {
+        if (elem === Maze.FILED_TYPES.EMPTY) {
+            searchForOpenPaths(mazeCopy, c);
         }
-    }
-
-    for (let i = 1; i < mazeCopy.realHeight - 1; i++) {
-        for (let j = 1; j < mazeCopy.realWidth - 1; j++) {
-            if (mazeCopy.getElem([i, j]) === Maze.FILED_TYPES.EMPTY) {
-                searchForOpenPaths(mazeCopy, [i, j]);
-            }
-        }
-    }
+    });
 
     return mazeCopy;
 };

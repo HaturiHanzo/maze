@@ -59,19 +59,31 @@ class Maze extends Array {
     }
 
     /**
+     * forEach override method
+     *
+     * @param {Function} callback
+     * @override {Array.prototype.forEach}
+     */
+    forEach(callback) {
+        for (var i = 0; i < this.realHeight; i++) {
+            for (let j = 0; j < this.realWidth; j++) {
+                let c = [i, j];
+                callback(this.getElem(c), c, this);
+            }
+        }
+    }
+
+    /**
      * toString override method
      *
-     * @override
+     * @override {Object.prototype.toString}
      */
     toString() {
         let strMaze = '';
 
-        for (var i = 0; i < this.realHeight; i++) {
-            for (let j = 0; j < this.realWidth; j++) {
-                strMaze += this[i * this.realWidth + j];
-            }
-            strMaze += '\n';
-        }
+        this.forEach((elem, c, maze) => {
+            strMaze += elem + (c[1] === maze.realWidth - 1 ? '\n' : '');
+        });
 
         return strMaze;
     }

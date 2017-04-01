@@ -9,7 +9,7 @@
  */
 'use strict';
 
-module.exports = {
+const MOVEMENTS = {
     /**
      * TOP LEFT movement
      *
@@ -90,3 +90,5 @@ module.exports = {
         return [c[0], c[1] - 1];
     }
 };
+
+module.exports = MOVEMENTS;
