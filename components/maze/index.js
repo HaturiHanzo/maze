@@ -101,7 +101,10 @@ Maze.FILED_TYPES = {
     EMPTY: 0,
     WALL: 1,
     OPEN_PATH: 2,
-    TEMP_VAL: 10
+    CLOSED_CYCLE: 3,
+    OPENED_CYCLE: 4,
+    TEMP_VAL: 10,
+    TEMP_START_VAL: 11
 };
 
 /**

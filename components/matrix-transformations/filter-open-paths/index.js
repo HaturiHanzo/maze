@@ -31,6 +31,7 @@ const searchForOpenPaths = (maze, c) => {
     // Filters useless paths
     moves = filters.mazeFieldTypeFilter(maze, c, moves, Maze.FILED_TYPES.WALL);
     moves = filters.mazeFieldTypeFilter(maze, c, moves, Maze.FILED_TYPES.TEMP_VAL);
+    moves = filters.crossFieldFilter(maze, c, moves);
 
     if (!moves.length) {
         return Maze.FILED_TYPES.EMPTY;
@@ -49,6 +50,7 @@ const searchForOpenPaths = (maze, c) => {
     maze.setElem(c, Maze.FILED_TYPES.TEMP_VAL);
     nextVal = searchForOpenPaths(maze, MOVEMENTS[moves[0]](c));
     maze.setElem(c, nextVal);
+
 
     return nextVal;
 };

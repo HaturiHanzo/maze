@@ -59,4 +59,11 @@ describe('filters.spec.js', () => {
             expect(filters.mazeFieldTypeFilter(maze, [1, 2], moves, Maze.FILED_TYPES.WALL).sort()).to.be.eql(resultMoves);
         });
     });
+
+    describe('sortMovements:', () => {
+        it('correctly sorts movements array in next order top,right,bottom,left,top-left,top-right,bottom-right,bottom-left', () => {
+            let movements = ['m7', 'm6', 'm5', 'm4', 'm3', 'm2', 'm1', 'm0'];
+            expect(movements.sort(filters.sortMovements)).to.be.eql(['m1', 'm3', 'm5', 'm7', 'm0', 'm2', 'm4', 'm6']);
+        });
+    });
 });
