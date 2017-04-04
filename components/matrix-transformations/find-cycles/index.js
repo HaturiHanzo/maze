@@ -12,7 +12,9 @@ const Maze = require('../../maze'),
  *
  * @param {Maze} maze
  * @param {Coordinates} startCoordinate
- * @returns {Array.<Coordinates>}
+ * @returns {Object} result
+ * @prop {Array.<Array.<Coordinates>>} result.cycles
+ * @prop {Maze} result.resultMaze
  */
 const processCycle = (maze, startCoordinate) => {
     let steps = [];
