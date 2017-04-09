@@ -11,10 +11,16 @@
     "node": ">=4.2.0"
   },
   "scripts": {
-    "test": "mocha ./**/*.spec.js"
+    "test": "./node_modules/.bin/mocha ./**/*.spec.js",
+    "build": "./node_modules/.bin/browserify ./ui/index.js -o ./dist/bundle.js",
+    "serve": "node ./server.js"
   },
   "devDependencies": {
-      "chai": "3.5.0",
-      "mocha": "3.2.0"
-  }
+    "chai": "3.5.0",
+    "mocha": "3.2.0",
+    "browserify": "14.3.0",
+    "watchify": "latest",
+    "browser-sync": "2.18.8"
+  },
+  "license": "MIT"
 }

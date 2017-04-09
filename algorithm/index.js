@@ -2,9 +2,9 @@
  * Module finds closed and open cycles in an array of / and \ symbols
  */
 'use strict';
-const findCycles = require('../matrix-transformations/find-cycles'),
-    basicTransform = require('../matrix-transformations/basic-transform'),
-    filterOpenPaths = require('../matrix-transformations/filter-open-paths');
+const findCycles = require('./matrix-transformations/find-cycles'),
+    basicTransform = require('./matrix-transformations/basic-transform'),
+    filterOpenPaths = require('./matrix-transformations/filter-open-paths');
 
 /**
  * Finds closed and open cycles in an array of / and \ symbols
