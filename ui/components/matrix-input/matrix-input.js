@@ -24,6 +24,10 @@ class MatrixInput {
         this._generateElement();
     }
 
+    getValue() {
+        return this.elements;
+    }
+
     getElement() {
         return this._element;
     }
@@ -43,6 +47,25 @@ class MatrixInput {
             }
             this._element.appendChild(buttonsBlock);
         }
+
+        this._element.addEventListener('click', (event) => {
+            let target = event.target,
+                index = target.getAttribute('data-index');
+
+            if (index === null) {
+                return;
+            }
+
+            let nextValue = '/';
+            index = parseInt(index, 10);
+
+            if (target.getAttribute('value') === '/') {
+                nextValue = '\\';
+            }
+
+            target.setAttribute('value', nextValue);
+            this.elements[index] = nextValue;
+        });
     }
 
     /**
@@ -55,19 +78,8 @@ class MatrixInput {
     _generateButton (index) {
         let button = document.createElement('input');
         button.setAttribute('type', 'button');
-        button.setAttribute('index', index.toString());
         button.setAttribute('value', this.elements[index]);
-
-        button.addEventListener('click', () => {
-            let nextValue = '/';
-
-            if (button.getAttribute('value') === '/') {
-                nextValue = '\\';
-            }
-
-            button.setAttribute('value', nextValue);
-            this.elements[index] = nextValue;
-        });
+        button.setAttribute('data-index', index.toString());
 
         return button;
     }

@@ -6,9 +6,9 @@
     <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-    <div class="app">
-        <div class="form-container">
-            <form>
+    <div class="container">
+        <div class="row">
+            <form id="sandbox-form">
                 <div>
                     <label>resolution:</label>
                     <input id="maze-width" type="number" min="1" max="75"/>
@@ -17,11 +17,17 @@
                 </div>
                 <div>
                     <label>matrix:</label>
-                    <div class="matrix-container"></div>
+                    <div id="matrix-container"></div>
+                </div>
+                <div>
+                    <button type="submit">find closed cycles and draw them</button>
                 </div>
             </form>
         </div>
-        <div class="canvas-container">
+        <div class="row">
+            <div id="canvas-container">
+
+            </div>
         </div>
     </div>
 </body>

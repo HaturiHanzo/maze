@@ -607,6 +607,10 @@ class MatrixInput {
         this._generateElement();
     }
 
+    getValue() {
+        return this.elements;
+    }
+
     getElement() {
         return this._element;
     }
@@ -626,6 +630,25 @@ class MatrixInput {
             }
             this._element.appendChild(buttonsBlock);
         }
+
+        this._element.addEventListener('click', (event) => {
+            let target = event.target,
+                index = target.getAttribute('data-index');
+
+            if (index === null) {
+                return;
+            }
+
+            let nextValue = '/';
+            index = parseInt(index, 10);
+
+            if (target.getAttribute('value') === '/') {
+                nextValue = '\\';
+            }
+
+            target.setAttribute('value', nextValue);
+            this.elements[index] = nextValue;
+        });
     }
 
     /**
@@ -638,19 +661,8 @@ class MatrixInput {
     _generateButton (index) {
         let button = document.createElement('input');
         button.setAttribute('type', 'button');
-        button.setAttribute('index', index.toString());
         button.setAttribute('value', this.elements[index]);
-
-        button.addEventListener('click', () => {
-            let nextValue = '/';
-
-            if (button.getAttribute('value') === '/') {
-                nextValue = '\\';
-            }
-
-            button.setAttribute('value', nextValue);
-            this.elements[index] = nextValue;
-        });
+        button.setAttribute('data-index', index.toString());
 
         return button;
     }
@@ -658,12 +670,150 @@ class MatrixInput {
 
 module.exports = MatrixInput;
 },{}],9:[function(require,module,exports){
-let alg = require('../algorithm');
-let MatrixInput = require('./components/matrix-input/matrix-input.js');
-let matrixContainer = document.getElementsByClassName('matrix-container')[0];
+// TODO: rewrite file with correct patterns and code style, it's MVP for now
 
-let matrixInput = new MatrixInput(3, 5);
+/**
+ * Component holds class for rendering matrix with buttons
+ */
 
-matrixContainer.appendChild(matrixInput.getElement());
+'use strict';
 
-},{"../algorithm":1,"./components/matrix-input/matrix-input.js":8}]},{},[9]);
+const BLOCK_OFFSET = 5;
+
+class MazeCanvas {
+    /**
+     * Constructs canvas in passed container
+     *
+     * @param {Object} containerSize Container boundary rect
+     * @param {Maze} maze
+     */
+    constructor(containerSize, maze) {
+        this._maze = maze.resultMaze;
+        this._canvas = document.createElement('canvas');
+        this._ctx = this._canvas.getContext("2d");
+        this._ctx.canvas.width = containerSize.width;
+        this._ctx.canvas.height = containerSize.height;
+
+        this._drawNet();
+    }
+
+    /**
+     * Draws canvas line
+     *
+     * @param {Coordinate} from
+     * @param {Coordinate} to
+     */
+    drawLine(from, to) {
+        this._ctx.lineWidth = 1;
+        this._ctx.beginPath();
+        this._ctx.moveTo(from[0], from[1]);
+        this._ctx.lineTo(to[0], to[1]);
+        this._ctx.stroke();
+    }
+
+    _countBlockWidth() {
+        this._blockWidth = this._ctx.canvas.width / this._maze.width;
+        this._blockHeight = this._ctx.canvas.height / this._maze.height;
+    }
+
+    _drawNet() {
+        // TODO: in some cases cycles are drowing on nonexisting coordinates
+        this._countBlockWidth();
+        for (let i = this._maze.height - 1; i > -1; i--) {
+            this.drawLine(
+                [0, this._blockHeight * i],
+                [(this._maze.height - i) * this._blockWidth, this._ctx.canvas.height]
+            );
+
+            this.drawLine(
+                [this._ctx.canvas.width, this._blockHeight * i],
+                [this._blockWidth * (this._maze.width - (this._maze.height - i)), this._ctx.canvas.height]
+            );
+        }
+
+        for (let i = 1; i < this._maze.width; i++) {
+            this.drawLine(
+                [this._blockWidth * i, 0],
+                [this._ctx.canvas.width, (this._maze.width - i) * this._blockWidth]
+            );
+
+            this.drawLine(
+                [this._blockWidth * (this._maze.width - i), 0],
+                [(this._maze.width - i - this._maze.height), (this._maze.width - i) * this._blockHeight]
+            );
+        }
+    }
+
+    getElement() {
+        return this._canvas;
+    }
+}
+
+module.exports = MazeCanvas;
+},{}],10:[function(require,module,exports){
+// TODO: rewrite file with correct patterns and code style, it's MVP for now
+
+'use strict';
+
+let algorithm = require('../algorithm'),
+    MatrixInput = require('./components/matrix-input/matrix-input.js'),
+    MazeCanvas = require('./components/maze-canvas/maze-canvas.js');
+
+let matrixContainer = document.getElementById('matrix-container'),
+    widthInput = document.getElementById('maze-width'),
+    heightInput = document.getElementById('maze-height'),
+    sandboxForm = document.getElementById('sandbox-form'),
+    canvasContainer = document.getElementById('canvas-container'),
+    isInputValid = false,
+    currentInputMatrix,
+    currentMazeCanvas;
+
+const validateInputsAndBuildMatrix = () => {
+    matrixContainer.innerHTML = '';
+
+    if (widthInput.value && heightInput.value) {
+        currentInputMatrix = new MatrixInput(widthInput.value, heightInput.value);
+        matrixContainer.appendChild(currentInputMatrix.getElement());
+        isInputValid = true;
+    }
+};
+
+widthInput.addEventListener('input', validateInputsAndBuildMatrix);
+heightInput.addEventListener('input', validateInputsAndBuildMatrix);
+
+sandboxForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    if (!isInputValid) {
+        return;
+    }
+
+    let intHeight = parseInt(heightInput.value),
+        intWidth = parseInt(widthInput.value),
+        result = algorithm(intWidth, intHeight, currentInputMatrix.getValue());
+
+    canvasContainer.style.height = Math.round(
+            canvasContainer.getBoundingClientRect().width * (heightInput.value / widthInput.value)
+        ) + 'px';
+
+    currentMazeCanvas = new MazeCanvas(canvasContainer.getBoundingClientRect(), result);
+    canvasContainer.innerHTML = '';
+    canvasContainer.appendChild(currentMazeCanvas.getElement());
+});
+
+// DEFAULT VALUES;
+widthInput.value = 6;
+heightInput.value = 4;
+
+currentInputMatrix = new MatrixInput(6, 4, [
+    '\\', '/', '/', '\\' , '\\', '/',
+    '\\', '/', '/', '/' , '\\', '/',
+    '/', '/', '\\', '\\' , '/', '\\',
+    '\\', '/', '\\', '/' , '/', '/'
+]);
+
+matrixContainer.appendChild(currentInputMatrix.getElement());
+isInputValid = true;
+
+
+},{"../algorithm":1,"./components/matrix-input/matrix-input.js":8,"./components/maze-canvas/maze-canvas.js":9}]},{},[10]);

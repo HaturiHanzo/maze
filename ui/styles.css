@@ -3,4 +3,18 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
+    background-color: #eee;
+}
+
+.container {
+    padding: 50px 10%;
+}
+
+.row {
+    padding: 5px;
+}
+
+#canvas-container {
+    max-width: 500px;
+    background-color: #FFF;
 }
