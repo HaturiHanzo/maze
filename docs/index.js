@@ -14,7 +14,6 @@ let matrixContainer = document.getElementById('matrix-container'),
     currentInputMatrix,
     currentMazeCanvas;
 
-
 const renderResult = () => {
     if (!isInputValid) {
         return;

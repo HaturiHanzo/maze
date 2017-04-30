@@ -7,14 +7,14 @@ const browserSync = require('browser-sync'),
  * Watches src files changes
  */
 const browserifyInst = browserify({
-    entries: './ui/index.js',
+    entries: './docs/index.js',
     cache: {},
     packageCache: {},
     plugin: [watchify]
 });
 
 const bundle = () => {
-    browserifyInst.bundle().pipe(fs.createWriteStream('./dist/bundle.js'));
+    browserifyInst.bundle().pipe(fs.createWriteStream('./docs/dist/bundle.js'));
 };
 
 browserifyInst.on('update', bundle);
@@ -27,8 +27,8 @@ browserSync({
     port: 3000,
     files: [
         "./dist/bundle.js",
-        "./ui/**/*.css",
-        "./ui/**/*.html"
+        "./docs/**/*.css",
+        "./docs/**/*.html"
     ],
-    server: ['./ui', './dist']
+    server: ['./docs']
 });
