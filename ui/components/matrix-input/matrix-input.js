@@ -9,10 +9,12 @@ class MatrixInput {
      *
      * @param {Number} width
      * @param {Number} height
+     * @param {Function} onChange callback which has to be called when used us changing buttons set
      * @param {Array.<String>} [elements]
      */
-    constructor(width, height, elements) {
+    constructor(width, height, onChange, elements) {
         this._element = null;
+        this.onChange = onChange;
         this.width = width;
         this.height = height;
         if (!elements || !elements.length) {
@@ -24,10 +26,20 @@ class MatrixInput {
         this._generateElement();
     }
 
+    /**
+     * Selected value getter
+     *
+     * @returns {Array.<String>}
+     */
     getValue() {
         return this.elements;
     }
 
+    /**
+     * Dom element getter
+     *
+     * @returns {HTMLElement}
+     */
     getElement() {
         return this._element;
     }
@@ -65,6 +77,7 @@ class MatrixInput {
 
             target.setAttribute('value', nextValue);
             this.elements[index] = nextValue;
+            this.onChange();
         });
     }
 

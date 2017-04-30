@@ -9,28 +9,13 @@ let algorithm = require('../algorithm'),
 let matrixContainer = document.getElementById('matrix-container'),
     widthInput = document.getElementById('maze-width'),
     heightInput = document.getElementById('maze-height'),
-    sandboxForm = document.getElementById('sandbox-form'),
     canvasContainer = document.getElementById('canvas-container'),
     isInputValid = false,
     currentInputMatrix,
     currentMazeCanvas;
 
-const validateInputsAndBuildMatrix = () => {
-    matrixContainer.innerHTML = '';
 
-    if (widthInput.value && heightInput.value) {
-        currentInputMatrix = new MatrixInput(widthInput.value, heightInput.value);
-        matrixContainer.appendChild(currentInputMatrix.getElement());
-        isInputValid = true;
-    }
-};
-
-widthInput.addEventListener('input', validateInputsAndBuildMatrix);
-heightInput.addEventListener('input', validateInputsAndBuildMatrix);
-
-sandboxForm.addEventListener('submit', (event) => {
-    event.preventDefault();
-
+const renderResult = () => {
     if (!isInputValid) {
         return;
     }
@@ -43,22 +28,37 @@ sandboxForm.addEventListener('submit', (event) => {
             canvasContainer.getBoundingClientRect().width * (heightInput.value / widthInput.value)
         ) + 'px';
 
-    currentMazeCanvas = new MazeCanvas(canvasContainer.getBoundingClientRect(), result);
+    currentMazeCanvas = new MazeCanvas(canvasContainer.getBoundingClientRect(), result, currentInputMatrix.getValue());
     canvasContainer.innerHTML = '';
     canvasContainer.appendChild(currentMazeCanvas.getElement());
-});
+};
 
-// DEFAULT VALUES;
+const validateInputsAndBuildMatrix = () => {
+    matrixContainer.innerHTML = '';
+
+    if (widthInput.value && heightInput.value) {
+        currentInputMatrix = new MatrixInput(widthInput.value, heightInput.value, renderResult);
+        matrixContainer.appendChild(currentInputMatrix.getElement());
+        isInputValid = true;
+        renderResult();
+    }
+};
+
+widthInput.addEventListener('input', validateInputsAndBuildMatrix);
+heightInput.addEventListener('input', validateInputsAndBuildMatrix);
+
+// SETTING DEFAULT MATRIX
 widthInput.value = 6;
 heightInput.value = 4;
 
-currentInputMatrix = new MatrixInput(6, 4, [
+currentInputMatrix = new MatrixInput(6, 4, renderResult, [
     '\\', '/', '/', '\\' , '\\', '/',
-    '\\', '/', '/', '/' , '\\', '/',
+    '\\', '/', '/', '/' , '/', '/',
     '/', '/', '\\', '\\' , '/', '\\',
-    '\\', '/', '\\', '/' , '/', '/'
+    '\\', '/', '\\', '/' , '\\', '/'
 ]);
 
 matrixContainer.appendChild(currentInputMatrix.getElement());
 isInputValid = true;
 
+renderResult();
